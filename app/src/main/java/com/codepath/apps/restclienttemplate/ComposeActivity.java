@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +28,7 @@ public class ComposeActivity extends AppCompatActivity {
 
     EditText etCompose;
     Button btnTweet;
-    TextView count;
+    TextView countChar;
     Boolean enable;
     TwitterClient client;
 
@@ -41,7 +41,7 @@ public class ComposeActivity extends AppCompatActivity {
         client = TwitterApp.getRestClient(this);
         etCompose = findViewById(R.id.etCompose);
         btnTweet = findViewById(R.id.btnTweet);
-        //count = findViewById(R.id.count);
+        countChar = findViewById(R.id.countChar);
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +76,39 @@ public class ComposeActivity extends AppCompatActivity {
                         Log.e(TAG, "On Failure to publish Tweet!", throwable);
                     }
                 });
+
             }
         });
+
+        etCompose.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                countChar.setText(Integer.toString(MAX_TWEET_LENGTH - etCompose.length()));
+                countChar.setTextColor(etCompose.length() > MAX_TWEET_LENGTH ?
+                        ResourcesCompat.getColor(getResources(), R.color.twitter_red, null) :
+                        ResourcesCompat.getColor(getResources(), R.color.twitter_gray, null));
+                setTweetButtonEnabled(etCompose.length() > 0 && etCompose.length() <= MAX_TWEET_LENGTH);
+            }
+        });
+
+        setTweetButtonEnabled(false);
     }
+
+    private void setTweetButtonEnabled(boolean enabled) {
+        enable = enabled;
+        btnTweet.setEnabled(enabled);
+        btnTweet.setAlpha((float) (enabled ? 1 : 0.6));
+    }
+
+    public void onCancelAction(View view) {
+        finish();
+    }
+
 }
+
