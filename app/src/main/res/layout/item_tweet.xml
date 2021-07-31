@@ -36,4 +36,13 @@
         android:layout_toEndOf="@+id/ivProfileImage"
         tools:text="This is my tweet!" />
 
+    <TextView
+        android:id="@+id/timeSheet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:layout_toEndOf="@+id/tvScreenName"
+        tools:text="1h" />
+
 </RelativeLayout>
